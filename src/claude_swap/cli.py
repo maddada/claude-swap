@@ -174,7 +174,7 @@ Examples:
             "unified history. History the profile already accumulated is "
             "merged into ~/.claude first. --no-share-history restores "
             "per-account history (the default, unless `cswap config set "
-            "run.shareHistory true`). Not supported on Windows."
+            "run.shareHistory true`)."
         ),
     )
     parser.add_argument(
