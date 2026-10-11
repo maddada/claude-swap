@@ -50,7 +50,7 @@ import unicodedata
 from pathlib import Path
 from typing import TYPE_CHECKING, NoReturn
 
-from claude_swap import macos_keychain, spawn
+from claude_swap import macos_keychain
 from claude_swap.claude_locks import proper_lockfile
 from claude_swap.exceptions import (
     ClaudeCodeLockTimeout,
@@ -63,6 +63,7 @@ from claude_swap.models import Platform
 from claude_swap.paths import get_default_global_config_path
 from claude_swap.printer import accent, dimmed, muted, warning
 from claude_swap.process_detection import ClaudeSession, scan_sessions
+from claude_swap.process_tree import run_and_reap
 from claude_swap.settings import atomic_write_json
 
 if TYPE_CHECKING:
@@ -1068,11 +1069,12 @@ class SessionManager:
         # nothing at all the run below still raises, and that is "unknown".
         claude_bin = shutil.which("claude") or "claude"
         try:
-            result = spawn.run(
+            # run_and_reap, not spawn.run: on Windows this short-lived
+            # claude can strand a suspended `git` it started (see
+            # process_tree), one per `cswap run`. Elsewhere it is spawn.run.
+            result = run_and_reap(
                 [claude_bin, "auth", "status", "--json"],
                 env=_probe_env(session_dir),
-                capture_output=True,
-                text=True,
                 timeout=_AUTH_STATUS_TIMEOUT,
             )
         except subprocess.TimeoutExpired:
