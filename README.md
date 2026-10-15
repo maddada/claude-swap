@@ -2,6 +2,14 @@
 
 Multi-account switcher for Claude Code. Easily switch between multiple Claude accounts without logging out, or let it switch for you before you hit a rate limit. Track usage for every account in a live dashboard, and run accounts in parallel. Works with both the Claude Code CLI and the VS Code extension.
 
+## About this branch (Ghostex's Windows build)
+
+This is the `ghostex` branch of [maddada/claude-swap](https://github.com/maddada/claude-swap), a fork of [realiti4/claude-swap](https://github.com/realiti4/claude-swap). It is upstream's 0.27.2 release plus one change: `cswap run --share-history` works on Windows, sharing history through a directory junction and a hard link instead of refusing ([realiti4/claude-swap#429](https://github.com/realiti4/claude-swap/pull/429)).
+
+Ghostex starts every Claude account with `--share-history`, so on Windows it installs this build (published as a wheel on this fork's GitHub releases, versioned `<upstream>.postN+ghostex`). macOS and Linux keep upstream's PyPI release.
+
+Drop this fork once an upstream release supports `--share-history` on Windows: point Ghostex's Windows install back at PyPI and remove the `.dependencies/claude-swap` submodule.
+
 ## Installation
 
 ### Using uv (recommended)
