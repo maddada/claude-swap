@@ -4,7 +4,11 @@ Multi-account switcher for Claude Code. Easily switch between multiple Claude ac
 
 ## About this branch (Ghostex's Windows build)
 
-This is the `ghostex` branch of [maddada/claude-swap](https://github.com/maddada/claude-swap), a fork of [realiti4/claude-swap](https://github.com/realiti4/claude-swap). It is upstream's 0.27.2 release plus one change: `cswap run --share-history` works on Windows, sharing history through a directory junction and a hard link instead of refusing ([realiti4/claude-swap#429](https://github.com/realiti4/claude-swap/pull/429)).
+This is the `ghostex` branch of [maddada/claude-swap](https://github.com/maddada/claude-swap), a fork of [realiti4/claude-swap](https://github.com/realiti4/claude-swap). It is upstream's 0.27.2 release plus three changes that are open upstream:
+
+- [realiti4/claude-swap#429](https://github.com/realiti4/claude-swap/pull/429): `cswap run --share-history` works on Windows, sharing history through a directory junction and a hard link instead of refusing.
+- [realiti4/claude-swap#430](https://github.com/realiti4/claude-swap/pull/430): folders already trusted in the default profile are trusted in session profiles too.
+- [realiti4/claude-swap#448](https://github.com/realiti4/claude-swap/pull/448): the auth-status probe no longer leaves suspended `git.exe` processes behind on Windows.
 
 Ghostex starts every Claude account with `--share-history`, so on Windows it installs this build (published as a wheel on this fork's GitHub releases, versioned `<upstream>.postN+ghostex`). macOS and Linux keep upstream's PyPI release.
 
