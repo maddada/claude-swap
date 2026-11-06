@@ -818,13 +818,12 @@ class TestRunCommand:
         set_setting(self.backup_dir, "run.shareHistory", "true")
         return self._dispatch(argv, platform=Platform.WINDOWS)
 
-    def test_share_history_setting_warns_and_falls_back_on_windows(self, capsys):
+    def test_share_history_setting_applies_on_windows(self, capsys):
         calls = self._windows_dispatch(["run", "2"])
-        assert ("run", "2", [], True, False, False) in calls
-        assert "run.shareHistory is not supported on Windows" in capsys.readouterr().out
+        assert ("run", "2", [], True, True, False) in calls
+        assert "not supported on Windows" not in capsys.readouterr().out
 
-    def test_explicit_share_history_still_forwarded_on_windows(self, capsys):
-        # SessionManager.run raises for it; the CLI must not swallow it.
+    def test_explicit_share_history_forwarded_on_windows(self, capsys):
         calls = self._windows_dispatch(["run", "2", "--share-history"])
         assert ("run", "2", [], True, True, False) in calls
         assert "not supported on Windows" not in capsys.readouterr().out
@@ -1832,14 +1831,14 @@ class TestRunAutoResolve:
             cli.main()
         return calls
 
-    def test_mapped_dir_setting_warns_and_falls_back_on_windows(
+    def test_mapped_dir_setting_applies_on_windows(
         self, tmp_path, monkeypatch, capsys
     ):
         from claude_swap.models import Platform
 
         calls = self._mapped_run(tmp_path, monkeypatch, ["run"], Platform.WINDOWS)
-        assert ("run", "2", [], True, False) in calls
-        assert "run.shareHistory is not supported on Windows" in capsys.readouterr().out
+        assert ("run", "2", [], True, True) in calls
+        assert "not supported on Windows" not in capsys.readouterr().out
 
     def test_unmapped_run_is_silent_on_windows(self, tmp_path, monkeypatch, capsys):
         from claude_swap.models import Platform

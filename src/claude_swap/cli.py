@@ -15,7 +15,6 @@ from claude_swap.models import (
     ACCOUNT_PRIORITY_MAX,
     ACCOUNT_THRESHOLD_MAX,
     ACCOUNT_THRESHOLD_MIN,
-    Platform,
 )
 from claude_swap.printer import (
     accent,
@@ -244,23 +243,15 @@ Examples:
 
 
 def _resolve_share_history(args: argparse.Namespace, switcher) -> bool:
-    """The flag wins; otherwise run.shareHistory, which Windows can't honor.
+    """The flag wins; otherwise run.shareHistory, on every platform.
 
-    An explicit --share-history still reaches SessionManager.run and errors
-    there; a setting-derived one just warns and falls back to per-account
-    history. Only called on account-targeting paths, so a bare unmapped run
-    (plain claude) stays silent.
+    Windows shares with junctions and hard links, so the setting applies
+    there as it does elsewhere. Only called on account-targeting paths, so a
+    bare unmapped run (plain claude) never reads it.
     """
     if args.share_history is not None:
         return args.share_history
-    enabled = load_run_settings(switcher.backup_dir).share_history
-    if enabled and switcher.platform == Platform.WINDOWS:
-        warning(
-            "run.shareHistory is not supported on Windows yet — "
-            "using per-account history."
-        )
-        return False
-    return enabled
+    return load_run_settings(switcher.backup_dir).share_history
 
 
 def _guard_root(switcher: ClaudeAccountSwitcher) -> None:
